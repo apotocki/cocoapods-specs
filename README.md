@@ -34,6 +34,15 @@ Add this repo as a source of the pod in your `Podfile`:
 pod 'openssl-iosx', '~> 4.1', :source => 'https://github.com/apotocki/cocoapods-specs.git'
 ```
 
+`:source` applies only to that pod: CocoaPods looks up its dependencies in the Podfile's global
+sources, which is Trunk by default. Of these pods only `libssh2-iosx` has one (`openssl-iosx`,
+through the default `libssh2-iosx/OpenSSL` subspec), so give it the same source:
+
+```ruby
+pod 'libssh2-iosx', '~> 1.11', :source => 'https://github.com/apotocki/cocoapods-specs.git'
+pod 'openssl-iosx', :source => 'https://github.com/apotocki/cocoapods-specs.git'
+```
+
 Or declare it as a source for the whole Podfile. Then it must come **before** Trunk: CocoaPods
 takes a pod from the first source that has it, so with Trunk listed first you would never see the
 versions published here. Declaring any source also disables the implicit Trunk source, so keep
