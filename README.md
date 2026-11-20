@@ -6,17 +6,22 @@ CocoaPods spec repo for the `*-iosx` pods by [apotocki](https://github.com/apoto
 and accepts no new versions after that. New versions of these pods are published here; all
 versions previously published to Trunk are mirrored here as well.
 
+> **These libraries are also available through [otok](https://otok-dev.github.io/).** otok builds
+> them from source on your machine and hands the result to Xcode as a local Swift package, with no
+> CocoaPods and no spec repo: see [Moving to otok](#moving-to-otok). The pods and this repo stay
+> maintained.
+
 ## Pods
 
-| Pod | Library |
-| --- | --- |
-| [openssl-iosx](https://github.com/apotocki/openssl-iosx) | [OpenSSL](https://github.com/openssl/openssl) |
-| [icu4c-iosx](https://github.com/apotocki/icu4c-iosx) | [ICU](https://github.com/unicode-org/icu) |
-| [boost-iosx](https://github.com/apotocki/boost-iosx) | [Boost](https://github.com/boostorg/boost) C++ libraries |
-| [lzma-iosx](https://github.com/apotocki/lzma-iosx) | liblzma from [XZ Utils](https://github.com/tukaani-project/xz) |
-| [lz4-iosx](https://github.com/apotocki/lz4-iosx) | [LZ4](https://github.com/lz4/lz4) |
-| [lua-iosx](https://github.com/apotocki/lua-iosx) | [Lua](https://github.com/lua/lua) |
-| [libssh2-iosx](https://github.com/apotocki/libssh2-iosx) | [libssh2](https://github.com/libssh2/libssh2) |
+| Pod | Library | otok recipe |
+| --- | --- | --- |
+| [openssl-iosx](https://github.com/apotocki/openssl-iosx) | [OpenSSL](https://github.com/openssl/openssl) | [apotocki/openssl](https://otok-dev.github.io/index/recipes/apotocki/openssl/) |
+| [icu4c-iosx](https://github.com/apotocki/icu4c-iosx) | [ICU](https://github.com/unicode-org/icu) | [apotocki/icu4c](https://otok-dev.github.io/index/recipes/apotocki/icu4c/) |
+| [boost-iosx](https://github.com/apotocki/boost-iosx) | [Boost](https://github.com/boostorg/boost) C++ libraries | [apotocki/boost](https://otok-dev.github.io/index/recipes/apotocki/boost/) |
+| [lzma-iosx](https://github.com/apotocki/lzma-iosx) | liblzma from [XZ Utils](https://github.com/tukaani-project/xz) | [apotocki/lzma](https://otok-dev.github.io/index/recipes/apotocki/lzma/) |
+| [lz4-iosx](https://github.com/apotocki/lz4-iosx) | [LZ4](https://github.com/lz4/lz4) | [apotocki/lz4](https://otok-dev.github.io/index/recipes/apotocki/lz4/) |
+| [lua-iosx](https://github.com/apotocki/lua-iosx) | [Lua](https://github.com/lua/lua) | [apotocki/lua](https://otok-dev.github.io/index/recipes/apotocki/lua/) |
+| [libssh2-iosx](https://github.com/apotocki/libssh2-iosx) | [libssh2](https://github.com/libssh2/libssh2) | [apotocki/libssh2](https://otok-dev.github.io/index/recipes/apotocki/libssh2/) |
 
 Each pod provides XCFrameworks for macOS, iOS, watchOS, tvOS and visionOS, including Mac Catalyst
 and the simulators.
@@ -64,6 +69,35 @@ This repo is a git source, so a plain `pod install` uses your local copy of it; 
 
 Add the source as shown above and run `pod update <pod>` (or `pod install --repo-update`).
 Versions already in your `Podfile.lock` are available here too, so nothing else changes.
+
+### Moving to otok
+
+[otok](https://otok-dev.github.io/) builds the same libraries from source, with your Xcode, for
+the platforms and deployment versions of your app. Install it (`brew install otok-dev/tap/otok`)
+and replace the pods with an `otok.toml` next to your Xcode project:
+
+```toml
+[otok]
+format = 1
+
+[apple]
+platforms = ["ios", "iossim", "macosx"]
+deployment = { ios = "16.0", macos = "13.0" }
+
+[deps.openssl]
+recipe = "apotocki/openssl"
+version = "~> 4.1"
+
+[deps.lz4]
+recipe = "apotocki/lz4"
+version = "~> 1.10"
+```
+
+Run `otok install`, add the generated `Otok` directory to your app once (**File → Add Package
+Dependencies… → Add Local…**) and link its products. Commit `otok.toml` and `otok.lock`; `Otok/`
+is generated. Remove the pods from your `Podfile` afterwards. Each pod's README shows its product
+names and options, and [Coming from CocoaPods](https://otok-dev.github.io/start/from-cocoapods/)
+covers the rest.
 
 ## Versions
 
